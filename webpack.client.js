@@ -32,11 +32,13 @@ const config = {
     entry: {
         app: "./src/client/index.js",
         vendor: [
+            "axios",
             "react",
             "react-dom",
             "react-router",
             "react-router-dom",
             "react-router-config",
+            "react-helmet",
             "redux",
             "redux-thunk",
             "react-redux"

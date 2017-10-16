@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+      "clean": "rm -rf build public",
       "dev": "npm-run-all --parallel dev:*",
       "dev:server": "nodemon --watch build --exec \"node build/server.js\"",
       "dev:build-server": "webpack --config webpack.server.js --watch",
       "dev:build-client": "webpack --config webpack.client.js --watch",
-      "prestart": "webpack --config webpack.server.js && NODE_ENV=production webpack --config webpack.client.js",
+      "prestart": "npm run clean && webpack --config webpack.server.js && NODE_ENV=production webpack --config webpack.client.js",
       "start": "NODE_ENV=production node build/server.js"
   },
   "repository": {

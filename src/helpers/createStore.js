@@ -1,6 +1,5 @@
 import { createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
-import { composeWithDevTools } from "redux-devtools-extension/developmentOnly";
 import axios from "axios";
 import reducers from "../client/reducers";
 
@@ -12,7 +11,8 @@ export default req => {
 
     const store = createStore(
         reducers,
-        composeWithDevTools(applyMiddleware(thunk.withExtraArgument(axiosInstance)))
+        {},
+        applyMiddleware(thunk.withExtraArgument(axiosInstance))
     );
 
     return store;
