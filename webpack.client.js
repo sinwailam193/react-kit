@@ -30,9 +30,13 @@ const config = {
     // Tell webpack the root file of our
     // server application
     entry: {
-        app: "./src/client/index.js",
+        app: [
+            "babel-polyfill",
+            "./src/client/index.js"
+        ],
         vendor: [
             "axios",
+            "babel-polyfill",
             "react",
             "react-dom",
             "react-router",

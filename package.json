@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-      "clean": "rm -rf build public",
-      "dev": "npm-run-all --parallel dev:*",
-      "dev:server": "nodemon --watch build --exec \"node build/server.js\"",
-      "dev:build-server": "webpack --config webpack.server.js --watch",
-      "dev:build-client": "webpack --config webpack.client.js --watch",
-      "prestart": "npm run clean && webpack --config webpack.server.js && NODE_ENV=production webpack --config webpack.client.js",
-      "start": "NODE_ENV=production node build/server.js"
+    "clean": "rm -rf build public",
+    "dev": "npm-run-all --parallel dev:*",
+    "dev:server": "nodemon --watch build --exec \"node build/server.js\"",
+    "dev:build-server": "webpack --config webpack.server.js --watch",
+    "dev:build-client": "webpack --config webpack.client.js --watch",
+    "prestart": "npm run clean && webpack --config webpack.server.js && NODE_ENV=production webpack --config webpack.client.js",
+    "start": "NODE_ENV=production node build/server.js"
   },
   "repository": {
     "type": "git",
@@ -57,6 +57,7 @@
   },
   "dependencies": {
     "axios": "^0.16.2",
+    "babel-polyfill": "^6.26.0",
     "express": "^4.16.2",
     "express-http-proxy": "^1.0.7",
     "react": "^16.0.0",
