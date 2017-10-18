@@ -10,12 +10,12 @@ const config = {
 
     // Tell webpack the root file of our
     // server application
-    entry: "./src/server.js",
+    entry: "./src/index.js",
 
     // Tell webpack where to put the output file
     // that is generated
     output: {
-        filename: "server.js",
+        filename: "index.js",
         path: path.resolve(__dirname, "build")
     },
 

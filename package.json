@@ -6,10 +6,10 @@
   "scripts": {
     "clean": "rm -rf build public",
     "dev": "npm-run-all --parallel clean dev:*",
-    "dev:server": "nodemon --exec babel-node src/server.js",
+    "dev:server": "nodemon server.js",
     "dev:build": "webpack --config webpack.client.js --watch",
     "prestart": "npm run clean && webpack --config webpack.server.js && NODE_ENV=production webpack --config webpack.client.js",
-    "start": "NODE_ENV=production node build/server.js"
+    "start": "NODE_ENV=production node server.js"
   },
   "repository": {
     "type": "git",
@@ -32,6 +32,7 @@
     "babel-preset-es2017": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
+    "babel-register": "^6.26.0",
     "css-loader": "^0.28.7",
     "cssnano": "^3.10.0",
     "eslint": "^4.9.0",

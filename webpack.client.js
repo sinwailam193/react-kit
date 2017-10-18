@@ -36,7 +36,6 @@ const config = {
         ],
         vendor: [
             "axios",
-            "babel-polyfill",
             "react",
             "react-dom",
             "react-router",
