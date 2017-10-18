@@ -8,6 +8,21 @@ import createStore from "./helpers/createStore";
 
 const port = 3000;
 const app = express();
+const isProd = process.env.NODE_ENV === "production";
+
+if (!isProd) {
+    const webpack = require("webpack");
+    const webpackConfig = require("../webpack.client");
+    const compiler = webpack(webpackConfig);
+
+    app.use(require("webpack-dev-middleware")(compiler, {
+        noInfo: true,
+        publicPath: webpackConfig.output.publicPath
+    }));
+    app.use(require("webpack-hot-middleware")(compiler));
+} else {
+    app.use(express.static("public"));
+}
 
 app.use(
     "/api",
@@ -18,10 +33,8 @@ app.use(
         }
     })
 );
-app.use(express.static("public"));
 app.get("*", (req, res) => {
     const store = createStore(req);
-
     const promises = matchRoutes(Routes, req.path)
         .map(({ route }) => (route.loadData ? route.loadData(store) : null))
         .map(promise => {
@@ -32,7 +45,6 @@ app.get("*", (req, res) => {
             }
             return null;
         });
-
     Promise.all(promises).then(() => {
         const context = {};
         const content = renderer(req, store, context);
@@ -43,7 +55,6 @@ app.get("*", (req, res) => {
         if (context.notFound) {
             res.status(404);
         }
-
         res.send(content);
     });
 });

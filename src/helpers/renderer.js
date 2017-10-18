@@ -21,7 +21,7 @@ export default (req, store, context) => {
             <head>
                 ${helmet.title.toString()}
                 ${helmet.meta.toString()}
-                ${process.env.NODE_ENV ? "<link rel=\"stylesheet\" href=\"main.css\">" : ""}
+                ${process.env.NODE_ENV === "production" ? "<link rel=\"stylesheet\" href=\"main.css\">" : ""}
             </head>
             <body>
                 <div id="root">${content}</div>

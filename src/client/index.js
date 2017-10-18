@@ -1,13 +1,11 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import { BrowserRouter } from "react-router-dom";
+import { hydrate, render } from "react-dom";
 import { createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
-import { Provider } from "react-redux";
-import { renderRoutes } from "react-router-config";
+import { AppContainer } from "react-hot-loader";
 import axios from "axios";
 import { composeWithDevTools } from "redux-devtools-extension/developmentOnly";
-import Routes from "./routes";
+import Main from "./main";
 import reducers from "./reducers";
 import "../../style/main.css";
 
@@ -21,15 +19,24 @@ const store = createStore(
     composeWithDevTools(applyMiddleware(thunk.withExtraArgument(axiosInstance)))
 );
 
-ReactDOM.hydrate(
-    <Provider store={store}>
-        <BrowserRouter>
-            <div>{renderRoutes(Routes)}</div>
-        </BrowserRouter>
-    </Provider>,
-    document.getElementById("root")
+const renderApp = Component => (
+    <AppContainer warnings={false}>
+        <Component store={store} />
+    </AppContainer>
 );
+hydrate(renderApp(Main), document.getElementById("root"));
 
 if (location.protocol === "https:" && "serviceWorker" in navigator) { // eslint-disable-line
     navigator.serviceWorker.register("./service-worker.js");
+}
+
+if (module.hot) {
+    module.hot.accept("./main", () => {
+        const newMain = require("./main").default;
+        render(renderApp(newMain), document.getElementById("root"));
+    });
+    module.hot.accept("./reducers", () => {
+        const newReducers = require("./reducers").default;
+        store.replaceReducer(newReducers);
+    });
 }

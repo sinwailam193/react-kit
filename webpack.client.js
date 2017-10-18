@@ -6,32 +6,19 @@ const baseConfig = require("./webpack.base.js");
 const SWPrecacheWebpackPlugin = require("sw-precache-webpack-plugin");
 
 const plugins = [
-    new webpack.optimize.CommonsChunkPlugin({ name: "vendor", filename: "vendor.js" }),
-    new SWPrecacheWebpackPlugin({
-        cacheId: `v1${new Date().getTime().toString()}`,
-        filename: "service-worker.js",
-        minify: true,
-        dontCacheBustUrlsMatching: /./,
-        staticFileGlobsIgnorePatterns: [/\.map$/, /\.json$/],
-        runtimeCaching: [
-            {
-                urlPattern: "/",
-                handler: "networkFirst"
-            },
-            {
-                urlPattern: /\/(users)/,
-                handler: "networkFirst"
-            }
-        ]
-    })
+    new webpack.optimize.CommonsChunkPlugin({ name: "vendor", filename: "vendor.js" })
 ];
+
+const prodApp = ["babel-polyfill", "./src/client/index.js"];
 
 const config = {
     // Tell webpack the root file of our
     // server application
     entry: {
-        app: [
+        app: prod ? prodApp : [
             "babel-polyfill",
+            "webpack-hot-middleware/client?reload=true&silent=true",
+            "react-hot-loader/patch",
             "./src/client/index.js"
         ],
         vendor: [
@@ -54,6 +41,8 @@ const config = {
         filename: "bundle.js",
         path: path.resolve(__dirname, "public"),
         publicPath: "/",
+        hotUpdateChunkFilename: "hot-update.js",
+        hotUpdateMainFilename: "hot-update.json"
     },
     devtool: prod ? false : "#inline-source-map",
     plugins: prod ? [...plugins,
@@ -62,9 +51,30 @@ const config = {
                 NODE_ENV: JSON.stringify("production")
             }
         }),
+        new SWPrecacheWebpackPlugin({
+            cacheId: `v1${new Date().getTime().toString()}`,
+            filename: "service-worker.js",
+            minify: true,
+            dontCacheBustUrlsMatching: /./,
+            staticFileGlobsIgnorePatterns: [/\.map$/, /\.json$/],
+            runtimeCaching: [
+                {
+                    urlPattern: "/",
+                    handler: "networkFirst"
+                },
+                {
+                    urlPattern: /\/(users)/,
+                    handler: "networkFirst"
+                }
+            ]
+        }),
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false })
-    ] : plugins,
+    ] : [...plugins,
+        new webpack.NamedModulesPlugin(),
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.NoEmitOnErrorsPlugin()
+    ]
 };
 
 module.exports = merge(baseConfig, config);
