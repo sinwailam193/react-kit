@@ -17,7 +17,7 @@ const config = {
     entry: {
         app: prod ? prodApp : [
             "babel-polyfill",
-            "webpack-hot-middleware/client?reload=true&silent=true",
+            "webpack-hot-middleware/client?reload=true",
             "react-hot-loader/patch",
             "./src/client/index.js"
         ],
@@ -31,10 +31,10 @@ const config = {
             "react-helmet",
             "redux",
             "redux-thunk",
-            "react-redux"
+            "react-redux",
+            "redux-devtools-extension"
         ]
     },
-
     // Tell webpack where to put the output file
     // that is generated
     output: {

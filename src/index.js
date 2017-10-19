@@ -14,9 +14,9 @@ if (!isProd) {
     const webpack = require("webpack");
     const webpackConfig = require("../webpack.client");
     const compiler = webpack(webpackConfig);
-
     app.use(require("webpack-dev-middleware")(compiler, {
         noInfo: true,
+        quiet: true,
         publicPath: webpackConfig.output.publicPath
     }));
     app.use(require("webpack-hot-middleware")(compiler));
