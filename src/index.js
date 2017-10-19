@@ -19,7 +19,7 @@ if (!isProd) {
         quiet: true,
         publicPath: webpackConfig.output.publicPath
     }));
-    app.use(require("webpack-hot-middleware")(compiler));
+    app.use(require("webpack-hot-middleware")(compiler, { log: false }));
 } else {
     app.use(express.static("public"));
 }

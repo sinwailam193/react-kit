@@ -17,7 +17,7 @@ const config = {
     entry: {
         app: prod ? prodApp : [
             "babel-polyfill",
-            "webpack-hot-middleware/client?reload=true",
+            "webpack-hot-middleware/client?reload=true&noInfo=true&quiet=true",
             "react-hot-loader/patch",
             "./src/client/index.js"
         ],
@@ -74,7 +74,8 @@ const config = {
         new webpack.NamedModulesPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin()
-    ]
+    ],
+    cache: true
 };
 
 module.exports = merge(baseConfig, config);
