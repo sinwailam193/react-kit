@@ -63,7 +63,7 @@ const config = {
                     handler: "networkFirst"
                 },
                 {
-                    urlPattern: /\/(users)/,
+                    urlPattern: /\/(users|admins)/,
                     handler: "networkFirst"
                 }
             ]

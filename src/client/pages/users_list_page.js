@@ -35,8 +35,8 @@ function mapStateToProps(state) {
 }
 
 // loadData is for grabing the data initially in server side
-function loadData(store) {
-    return store.dispatch(fetchUsers());
+function loadData({ dispatch }) {
+    return dispatch(fetchUsers());
 }
 
 export default {
