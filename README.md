@@ -1,2 +1,1 @@
-# onNez
-Frontend side of our App
+# React-Kit

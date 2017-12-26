@@ -34,7 +34,7 @@ export class NavBar extends Component {
             <AppBar position="static" color="primary">
                 <Toolbar>
                     <Typography type="title" color="inherit" id="logo-container">
-                        <Link to="/" href="/" className="link">onNez</Link>
+                        <Link to="/" href="/" className="link">React Kit</Link>
                     </Typography>
                     <IconButton
                         aria-owns={anchorEl ? "menu-appbar" : null}
