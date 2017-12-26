@@ -1,9 +1,16 @@
 import React, { Component } from "react";
 import { renderRoutes } from "react-router-config";
-import Header from "../components/header";
-import { fetchCurrentUser } from "../actions";
+import { authUser } from "../actions/authAction";
+import { NavBar } from "./components";
 
 class App extends Component {
+    componentDidMount() {
+        const jssStyles = document.getElementById("jss-server-side");
+        if (jssStyles && jssStyles.parentNode) {
+            jssStyles.parentNode.removeChild(jssStyles);
+        }
+    }
+
     notFound = () => {
         const { route: { routes }, location: { pathname } } = this.props;
         for (let i = 0; i < routes.length - 1; i++) {
@@ -16,12 +23,12 @@ class App extends Component {
     };
 
     render() {
-        const { props: { route: { routes } }, notFound } = this;
+        const { props: { route: { routes }, history }, notFound } = this;
         const isNotFound = notFound();
 
         return (
-            <div>
-                {!isNotFound ? <Header /> : null}
+            <div className="app">
+                {isNotFound ? null : <NavBar history={history} />}
                 {renderRoutes(routes)}
             </div>
         );
@@ -30,5 +37,5 @@ class App extends Component {
 
 export default {
     component: App,
-    loadData: ({ dispatch }) => dispatch(fetchCurrentUser())
+    loadData: ({ dispatch }) => dispatch(authUser())
 };

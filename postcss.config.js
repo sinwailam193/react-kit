@@ -1,11 +1,11 @@
-const smartImport = require("postcss-smart-import");
+const postCSSImport = require("postcss-import");
 const precss = require("precss");
-const autoprefixer = require("autoprefixer");
+const cssNext = require("postcss-cssnext");
 
 module.exports = {
     plugins: [
-        smartImport({ /* ...options */ }),
+        postCSSImport({ path: [`${__dirname}/style`, "node_modules"] }),
         precss({ /* ...options */ }),
-        autoprefixer({ /* ...options */ })
+        cssNext({ /* ...options */ })
     ]
 };

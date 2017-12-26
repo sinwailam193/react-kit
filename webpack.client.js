@@ -9,7 +9,7 @@ const plugins = [
     new webpack.optimize.CommonsChunkPlugin({ name: "vendor", filename: "vendor.js" })
 ];
 
-const prodApp = ["babel-polyfill", "./src/client/index.js"];
+const prodApp = ["babel-polyfill", "./src/index.js"];
 
 const config = {
     // Tell webpack the root file of our
@@ -19,7 +19,7 @@ const config = {
             "babel-polyfill",
             "webpack-hot-middleware/client?reload=true&noInfo=true&quiet=true",
             "react-hot-loader/patch",
-            "./src/client/index.js"
+            "./src/index.js"
         ],
         vendor: [
             "axios",
@@ -32,7 +32,8 @@ const config = {
             "redux",
             "redux-thunk",
             "react-redux",
-            "redux-devtools-extension"
+            "redux-devtools-extension",
+            "material-ui"
         ]
     },
     // Tell webpack where to put the output file
@@ -75,7 +76,22 @@ const config = {
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin()
     ],
-    cache: true
+    cache: true,
+    module: {
+        rules: [
+            {
+                test: /\.(png|jpg|gif)$/,
+                use: [
+                    {
+                        loader: "file-loader",
+                        options: {
+                            outputPath: "assets/"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
 };
 
 module.exports = merge(baseConfig, config);

@@ -17,7 +17,7 @@ module.exports = {
                 use: prod ? ExtractTextPlugin.extract({
                     fallback: "style-loader",
                     use: ["css-loader?importLoaders=1", "postcss-loader"]
-                }) : ["style-loader", "css-loader?importLoaders=1", "postcss-loader"]
+                }) : ["style-loader?sourceMap=true", "css-loader?importLoaders=1", "postcss-loader"]
             }
         ]
     },

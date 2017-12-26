@@ -1,9 +1,7 @@
-@import "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css";
+@import "material-icons.css";
 
-$font_size: 50px;
+/* Pages CSS */
+@import "pages/app.css";
 
-div {
-    .center-align {
-        font-size: $font_size;
-    }
-}
+/* Components CSS */
+@import "components/navbar.css";
