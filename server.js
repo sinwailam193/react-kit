@@ -15,15 +15,16 @@ if (isProd) {
     app.use(express.static("public"));
 } else {
     const webpack = require("webpack");
-    const webpackConfig = require("./webpack.client");
+    const webpackConfig = require("./build/webpack.client");
 
     const compiler = webpack(webpackConfig);
     app.use(require("webpack-dev-middleware")(compiler, {
         noInfo: true,
         quiet: true,
-        publicPath: webpackConfig.output.publicPath
+        publicPath: webpackConfig.output.publicPath,
+        stats: "minimal"
     }));
-    app.use(require("webpack-hot-middleware")(compiler, { log: false }));
+    app.use(require("webpack-hot-middleware")(compiler, { log: false, heartbeat: 5000 }));
 }
 
 // serve favicon

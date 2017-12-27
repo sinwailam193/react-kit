@@ -2,6 +2,8 @@ const merge = require("webpack-merge");
 const baseConfig = require("./webpack.base.js");
 const webpackNodeExternals = require("webpack-node-externals");
 
+const directory = `${__dirname.replace("build", "")}`;
+
 const config = {
     // Inform webpack that we're building a bundle
     // for nodeJS, rather than for the browser
@@ -9,13 +11,13 @@ const config = {
 
     // Tell webpack the root file of our
     // server application
-    entry: "./server.js",
+    entry: `${directory}/server.js`,
 
     // Tell webpack where to put the output file
     // that is generated
     output: {
         filename: "buildServer.js",
-        path: __dirname
+        path: `${directory}`
     },
 
     externals: [webpackNodeExternals()],

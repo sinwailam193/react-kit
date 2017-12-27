@@ -1,11 +1,13 @@
 const prod = process.env.NODE_ENV === "production";
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const FriendlyErrorsPlugin = require("friendly-errors-webpack-plugin");
 const cssnano = require("cssnano");
 
 module.exports = {
     // Tell webpack to run babel on every file it runs through
     module: {
+        noParse: /es6-promise\.js$/, // avoid webpack shimming process
         rules: [
             {
                 test: /\.js?$/,
@@ -33,5 +35,5 @@ module.exports = {
                 canPrint: true
             })
         ]
-        : []
+        : [new FriendlyErrorsPlugin()]
 };

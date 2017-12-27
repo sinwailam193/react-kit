@@ -1,5 +1,4 @@
 const prod = process.env.NODE_ENV === "production";
-const path = require("path");
 const webpack = require("webpack");
 const merge = require("webpack-merge");
 const baseConfig = require("./webpack.base.js");
@@ -9,7 +8,8 @@ const plugins = [
     new webpack.optimize.CommonsChunkPlugin({ name: "vendor", filename: "vendor.js" })
 ];
 
-const prodApp = ["babel-polyfill", "./src/index.js"];
+const directory = __dirname.replace("build", "");
+const prodApp = ["babel-polyfill", `./src/index.js`];
 
 const config = {
     // Tell webpack the root file of our
@@ -19,7 +19,7 @@ const config = {
             "babel-polyfill",
             "webpack-hot-middleware/client?reload=true&noInfo=true&quiet=true",
             "react-hot-loader/patch",
-            "./src/index.js"
+            `./src/index.js`
         ],
         vendor: [
             "axios",
@@ -40,7 +40,7 @@ const config = {
     // that is generated
     output: {
         filename: "bundle.js",
-        path: path.resolve(__dirname, "public"),
+        path: `${directory}public`,
         publicPath: "/",
         hotUpdateChunkFilename: "hot-update.js",
         hotUpdateMainFilename: "hot-update.json"

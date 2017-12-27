@@ -14,4 +14,4 @@ export const theme = createMuiTheme({
     }
 });
 
-export const API_URL = "http://localhost:3000";
+export const API_URL = isProd ? "https://onnez-api.herokuapp.com/" : "http://localhost:3000";

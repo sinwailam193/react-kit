@@ -456,9 +456,10 @@ if (isProd) {
     app.use(__webpack_require__(53)(compiler, {
         noInfo: true,
         quiet: true,
-        publicPath: webpackConfig.output.publicPath
+        publicPath: webpackConfig.output.publicPath,
+        stats: "minimal"
     }));
-    app.use(__webpack_require__(54)(compiler, { log: false }));
+    app.use(__webpack_require__(54)(compiler, { log: false, heartbeat: 5000 }));
 }
 
 // serve favicon
@@ -1533,14 +1534,14 @@ var _temp = function () {
 /* WEBPACK VAR INJECTION */(function(__dirname) {
 
 var prod = process.env.NODE_ENV === "production";
-var path = __webpack_require__(46);
 var webpack = __webpack_require__(12);
-var merge = __webpack_require__(47);
-var baseConfig = __webpack_require__(48);
+var merge = __webpack_require__(46);
+var baseConfig = __webpack_require__(47);
 var SWPrecacheWebpackPlugin = __webpack_require__(52);
 
 var plugins = [new webpack.optimize.CommonsChunkPlugin({ name: "vendor", filename: "vendor.js" })];
 
+var directory = __dirname.replace("build", "");
 var prodApp = ["babel-polyfill", "./src/index.js"];
 
 var config = {
@@ -1554,7 +1555,7 @@ var config = {
     // that is generated
     output: {
         filename: "bundle.js",
-        path: path.resolve(__dirname, "public"),
+        path: directory + "public",
         publicPath: "/",
         hotUpdateChunkFilename: "hot-update.js",
         hotUpdateMainFilename: "hot-update.json"
@@ -1600,13 +1601,15 @@ var _temp = function () {
         return;
     }
 
-    __REACT_HOT_LOADER__.register(prod, "prod", "/Users/aaronlam/Documents/react-kit/webpack.client.js");
+    __REACT_HOT_LOADER__.register(prod, "prod", "/Users/aaronlam/Documents/react-kit/build/webpack.client.js");
 
-    __REACT_HOT_LOADER__.register(plugins, "plugins", "/Users/aaronlam/Documents/react-kit/webpack.client.js");
+    __REACT_HOT_LOADER__.register(plugins, "plugins", "/Users/aaronlam/Documents/react-kit/build/webpack.client.js");
 
-    __REACT_HOT_LOADER__.register(prodApp, "prodApp", "/Users/aaronlam/Documents/react-kit/webpack.client.js");
+    __REACT_HOT_LOADER__.register(directory, "directory", "/Users/aaronlam/Documents/react-kit/build/webpack.client.js");
 
-    __REACT_HOT_LOADER__.register(config, "config", "/Users/aaronlam/Documents/react-kit/webpack.client.js");
+    __REACT_HOT_LOADER__.register(prodApp, "prodApp", "/Users/aaronlam/Documents/react-kit/build/webpack.client.js");
+
+    __REACT_HOT_LOADER__.register(config, "config", "/Users/aaronlam/Documents/react-kit/build/webpack.client.js");
 }();
 
 ;
@@ -1616,29 +1619,25 @@ var _temp = function () {
 /* 46 */
 /***/ (function(module, exports) {
 
-module.exports = require("path");
-
-/***/ }),
-/* 47 */
-/***/ (function(module, exports) {
-
 module.exports = require("webpack-merge");
 
 /***/ }),
-/* 48 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var prod = process.env.NODE_ENV === "production";
-var ExtractTextPlugin = __webpack_require__(49);
-var OptimizeCssAssetsPlugin = __webpack_require__(50);
+var ExtractTextPlugin = __webpack_require__(48);
+var OptimizeCssAssetsPlugin = __webpack_require__(49);
+var FriendlyErrorsPlugin = __webpack_require__(50);
 var cssnano = __webpack_require__(51);
 
 module.exports = {
     // Tell webpack to run babel on every file it runs through
     module: {
+        noParse: /es6-promise\.js$/, // avoid webpack shimming process
         rules: [{
             test: /\.js?$/,
             loader: "babel-loader",
@@ -1658,7 +1657,7 @@ module.exports = {
         cssProcessor: cssnano,
         cssProcessorOptions: { discardComments: { removeAll: true } },
         canPrint: true
-    })] : []
+    })] : [new FriendlyErrorsPlugin()]
 };
 ;
 
@@ -1667,22 +1666,28 @@ var _temp = function () {
         return;
     }
 
-    __REACT_HOT_LOADER__.register(prod, "prod", "/Users/aaronlam/Documents/react-kit/webpack.base.js");
+    __REACT_HOT_LOADER__.register(prod, "prod", "/Users/aaronlam/Documents/react-kit/build/webpack.base.js");
 }();
 
 ;
 
 /***/ }),
-/* 49 */
+/* 48 */
 /***/ (function(module, exports) {
 
 module.exports = require("extract-text-webpack-plugin");
 
 /***/ }),
-/* 50 */
+/* 49 */
 /***/ (function(module, exports) {
 
 module.exports = require("optimize-css-assets-webpack-plugin");
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports) {
+
+module.exports = require("friendly-errors-webpack-plugin");
 
 /***/ }),
 /* 51 */
