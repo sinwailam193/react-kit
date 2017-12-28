@@ -40,7 +40,7 @@ function renderApp(App, server) {
     // Firstly, define our full application component, wrapping the given
     // component app with a browser based version of react router.
     const app = (
-        <ReactHotLoader>
+        <ReactHotLoader warnings={false}>
             <AsyncComponentProvider rehydrateState={asyncComponentsRehydrateState}>
                 <JobProvider rehydrateState={rehydrateState}>
                     <Provider store={store}>

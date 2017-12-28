@@ -1,4 +1,3 @@
-import "normalize.css/normalize.css";
 import React, { Component } from "react";
 import Switch from "react-router-dom/Switch";
 import Route from "react-router-dom/Route";
@@ -36,7 +35,7 @@ export default class Application extends Component {
                         and combine their results:
                         http://realfavicongenerator.net/
                         http://www.favicomatic.com/
-                        */}
+                    */}
                     <link rel="apple-touch-icon-precomposed" sizes="152x152" href="/favicons/apple-touch-icon-152x152.png" />
                     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/favicons/apple-touch-icon-144x144.png" />
                     <link rel="apple-touch-icon-precomposed" sizes="120x120" href="/favicons/apple-touch-icon-120x120.png" />
@@ -59,14 +58,6 @@ export default class Application extends Component {
                     <meta name="msapplication-wide310x150logo" content="/favicons/mstile-310x150.png" />
                     <meta name="msapplication-square310x310logo" content="/favicons/mstile-310x310.png" />
                     <link rel="manifest" href="/manifest.json" />
-
-                    {/*
-                            NOTE: This is simply for quick and easy styling on the demo. Remove
-                            this and the related items from the Content Security Policy in the
-                            global config if you have no intention of using milligram.
-                            */}
-                    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic" />
-                    <link rel="stylesheet" href="//cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css" />
                 </Helmet>
                 <Header />
                 <div>

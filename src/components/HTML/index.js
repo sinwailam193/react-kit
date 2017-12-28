@@ -1,25 +1,24 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable jsx-a11y/html-has-lang */
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-/**
- * The is the HTML shell for our React Application.
- */
-function HTML(props) {
-    const {
-        htmlAttributes, headerElements, bodyElements, appBodyString
-    } = props;
+class HTML extends Component {
+    render() {
+        const {
+            htmlAttributes, headerElements, bodyElements, appBodyString
+        } = this.props;
 
-    return (
-        <html {...htmlAttributes}>
-            <head>{headerElements}</head>
-            <body>
-                <div id="app" dangerouslySetInnerHTML={{ __html: appBodyString }} />
-                {bodyElements}
-            </body>
-        </html>
-    );
+        return (
+            <html {...htmlAttributes}>
+                <head>{headerElements}</head>
+                <body>
+                    <div id="app" dangerouslySetInnerHTML={{ __html: appBodyString }} />
+                    {bodyElements}
+                </body>
+            </html>
+        );
+    }
 }
 
 HTML.propTypes = {
@@ -36,7 +35,5 @@ HTML.defaultProps = {
     bodyElements: null,
     appBodyString: ""
 };
-
-// EXPORT
 
 export default HTML;

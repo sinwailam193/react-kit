@@ -12,7 +12,6 @@ class UserRoute extends Component {
         return (
             <div>
                 <Helmet title="Users" />
-                6
                 <ul>{users.map(e => <li key={e.id}>{e.name}</li>)}</ul>
             </div>
         );
@@ -23,9 +22,8 @@ const mapStateToProps = ({ userRoute } /* , { match } comes from router */) => (
     users: userRoute.users
 });
 
-const ConnectHome = connect(mapStateToProps, { fetchUsers: userAction.fetchUsers });
-const ComposeHome = compose(
-    ConnectHome,
+const ComposeUserRoute = compose(
+    connect(mapStateToProps, { fetchUsers: userAction.fetchUsers }),
     withJob({
         work({ users, fetchUsers }) {
             if (users.length) {
@@ -38,4 +36,4 @@ const ComposeHome = compose(
     })
 )(UserRoute);
 
-export default ComposeHome;
+export default ComposeUserRoute;
