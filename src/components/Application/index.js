@@ -12,7 +12,7 @@ import Error404 from "./Error404";
 import Header from "./Header";
 
 import AsyncHomeRoute from "./AsyncHomeRoute";
-import AsyncPostsRoute from "./AsyncPostsRoute";
+import AsyncUsersRoute from "./AsyncUsersRoute";
 
 export default class Application extends Component {
     render() {
@@ -20,9 +20,7 @@ export default class Application extends Component {
             <div>
                 <Helmet>
                     <html lang="en" />
-                    <title>
-                        {config("htmlPage.defaultTitle")}
-                    </title>
+                    <title>{config("htmlPage.defaultTitle")}</title>
                     <meta name="application-name" content={config("htmlPage.defaultTitle")} />
                     <meta name="description" content={config("htmlPage.description")} />
                     <meta charSet="utf-8" />
@@ -73,8 +71,8 @@ export default class Application extends Component {
                 <Header />
                 <div>
                     <Switch>
+                        <Route path="/users" component={AsyncUsersRoute} />
                         <Route exact path="/" component={AsyncHomeRoute} />
-                        <Route path="/posts" component={AsyncPostsRoute} />
                         <Route component={Error404} />
                     </Switch>
                 </div>

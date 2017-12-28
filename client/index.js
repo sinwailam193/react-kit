@@ -17,10 +17,8 @@ import Application from "../src/components/Application";
 const container = document.querySelector("#app");
 
 // Create our Redux store.
-const store = configureStore(
-    // Server side rendering would have mounted our state on this global.
-    window.__APP_STATE__, // eslint-disable-line no-underscore-dangle
-);
+// Server side rendering would have mounted our state on this global.
+const store = configureStore({ initialState: window.__APP_STATE__ }); // eslint-disable-line no-underscore-dangle
 
 // Does the user's browser support the HTML5 history API?
 // If the user's browser doesn't support the HTML5 history API then we

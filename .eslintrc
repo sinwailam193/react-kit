@@ -5,7 +5,8 @@
         "window": true,
         "navigator": true,
         "document": true,
-        "location": true
+        "location": true,
+        "System": true
     },
     "env": {
         "jquery": true

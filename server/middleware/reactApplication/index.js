@@ -21,7 +21,7 @@ export default function reactApplicationMiddleware(request, response) {
     if (typeof response.locals.nonce !== "string") {
         throw new Error('A "nonce" value has not been attached to the response');
     }
-    const nonce = response.locals.nonce;
+    const { nonce } = response.locals;
 
     // It's possible to disable SSR, which can be useful in development mode.
     // In this case traditional client side only rendering will occur.
@@ -49,7 +49,7 @@ export default function reactApplicationMiddleware(request, response) {
     const jobContext = createJobContext();
 
     // Create the redux store.
-    const store = configureStore();
+    const store = configureStore({ request });
 
     // Declare our React application.
     const app = (
@@ -70,17 +70,15 @@ export default function reactApplicationMiddleware(request, response) {
         const appString = renderToString(app);
 
         // Generate the html response.
-        const html = renderToStaticMarkup(
-            <ServerHTML
-                reactAppString={appString}
-                nonce={nonce}
-                helmet={Helmet.rewind()}
-                storeState={store.getState()}
-                routerState={reactRouterContext}
-                jobsState={jobContext.getState()}
-                asyncComponentsState={asyncComponentsContext.getState()}
-            />,
-        );
+        const html = renderToStaticMarkup(<ServerHTML
+            reactAppString={appString}
+            nonce={nonce}
+            helmet={Helmet.rewind()}
+            storeState={store.getState()}
+            routerState={reactRouterContext}
+            jobsState={jobContext.getState()}
+            asyncComponentsState={asyncComponentsContext.getState()}
+        />);
 
         // Check if the router context contains a redirect, if so we need to set
         // the specific status and redirect header and end the response.
@@ -90,15 +88,6 @@ export default function reactApplicationMiddleware(request, response) {
             return;
         }
 
-        response
-            .status(
-                reactRouterContext.missed
-                    ? // If the renderResult contains a "missed" match then we set a 404 code.
-                      // Our App component will handle the rendering of an Error404 view.
-                      404
-                    : // Otherwise everything is all good and we send a 200 OK status.
-                      200,
-            )
-            .send(`<!DOCTYPE html>${html}`);
+        response.status(reactRouterContext.missed ? 404 : 200).send(`<!DOCTYPE html>${html}`);
     });
 }

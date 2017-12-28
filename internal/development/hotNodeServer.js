@@ -11,28 +11,16 @@ class HotNodeServer {
             if (this.server) {
                 this.server.kill();
                 this.server = null;
-                log({
-                    title: name,
-                    level: "info",
-                    message: "Restarting server...",
-                });
             }
 
             const newServer = spawn("node", [compiledEntryFile, "--color"]);
-
-            log({
-                title: name,
-                level: "info",
-                message: "Server running with latest changes.",
-                notify: true,
-            });
 
             newServer.stdout.on("data", data => console.log(data.toString().trim()));
             newServer.stderr.on("data", data => {
                 log({
                     title: name,
                     level: "error",
-                    message: "Error in server execution, check the console for more info.",
+                    message: "Error in server execution, check the console for more info."
                 });
                 console.error(data.toString().trim());
             });
@@ -43,10 +31,7 @@ class HotNodeServer {
         // build.  This avoids any issues with node server bundles depending on
         // client bundle assets.
         const waitForClientThenStartServer = () => {
-            if (this.serverCompiling) {
-                // A new server bundle is building, break this loop.
-                return;
-            }
+            if (this.serverCompiling) return;
             if (this.clientCompiling) {
                 setTimeout(waitForClientThenStartServer, 50);
             } else {
@@ -66,11 +51,6 @@ class HotNodeServer {
 
         compiler.plugin("compile", () => {
             this.serverCompiling = true;
-            log({
-                title: name,
-                level: "info",
-                message: "Building new bundle...",
-            });
         });
 
         compiler.plugin("done", stats => {
@@ -86,7 +66,7 @@ class HotNodeServer {
                         title: name,
                         level: "error",
                         message: "Build failed, check the console for more information.",
-                        notify: true,
+                        notify: true
                     });
                     console.log(stats.toString());
                     return;
@@ -98,7 +78,7 @@ class HotNodeServer {
                     title: name,
                     level: "error",
                     message: "Failed to start, please check the console for more information.",
-                    notify: true,
+                    notify: true
                 });
                 console.error(err);
             }

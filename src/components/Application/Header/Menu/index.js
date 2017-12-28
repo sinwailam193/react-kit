@@ -6,10 +6,14 @@ export default class Menu extends Component {
         return (
             <ul>
                 <li>
-                    <Link to="/">Home</Link>
+                    <Link to="/" href="/">
+                        Home
+                    </Link>
                 </li>
                 <li>
-                    <Link to="/posts">Posts</Link>
+                    <Link to="/users" href="/users">
+                        Users
+                    </Link>
                 </li>
             </ul>
         );

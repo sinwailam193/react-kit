@@ -1,13 +1,7 @@
-/**
- * This module is responsible for generating the HTML page response for
- * the react application middleware.
- */
-
 /* eslint-disable react/no-danger */
 /* eslint-disable react/no-array-index-key */
 
 import React, { Children } from "react";
-import PropTypes from "prop-types";
 import serialize from "serialize-javascript";
 
 import config from "../../../config";
@@ -38,7 +32,9 @@ function scriptTag(jsFilePath) {
 // COMPONENT
 
 function ServerHTML(props) {
-    const { asyncComponentsState, helmet, jobsState, nonce, reactAppString, routerState, storeState } = props;
+    const {
+        asyncComponentsState, helmet, jobsState, nonce, reactAppString, routerState, storeState
+    } = props;
 
     // Creates an inline script definition that is protected by the nonce.
     const inlineScript = body => <script nonce={nonce} type="text/javascript" dangerouslySetInnerHTML={{ __html: body }} />;
@@ -49,7 +45,7 @@ function ServerHTML(props) {
         ...ifElse(helmet)(() => helmet.meta.toComponent(), []),
         ...ifElse(helmet)(() => helmet.link.toComponent(), []),
         ifElse(clientEntryAssets && clientEntryAssets.css)(() => stylesheetTag(clientEntryAssets.css)),
-        ...ifElse(helmet)(() => helmet.style.toComponent(), []),
+        ...ifElse(helmet)(() => helmet.style.toComponent(), [])
     ]);
 
     const bodyElements = removeNil([
@@ -79,45 +75,19 @@ function ServerHTML(props) {
         // compilation times.  Therefore we need to inject the path to the
         // vendor dll bundle below.
         ifElse(process.env.BUILD_FLAG_IS_DEV === "true" && config("bundles.client.devVendorDLL.enabled"))(() =>
-            scriptTag(`${config("bundles.client.webPath")}${config("bundles.client.devVendorDLL.name")}.js?t=${Date.now()}`),
-        ),
+            scriptTag(`${config("bundles.client.webPath")}${config("bundles.client.devVendorDLL.name")}.js?t=${Date.now()}`)),
         ifElse(clientEntryAssets && clientEntryAssets.js)(() => scriptTag(clientEntryAssets.js)),
-        ...ifElse(helmet)(() => helmet.script.toComponent(), []),
+        ...ifElse(helmet)(() => helmet.script.toComponent(), [])
     ]);
 
     return (
         <HTML
             htmlAttributes={ifElse(helmet)(() => helmet.htmlAttributes.toComponent(), null)}
-            headerElements={headerElements.map((x, idx) =>
-                (<KeyedComponent key={idx}>
-                    {x}
-                </KeyedComponent>),
-            )}
-            bodyElements={bodyElements.map((x, idx) =>
-                (<KeyedComponent key={idx}>
-                    {x}
-                </KeyedComponent>),
-            )}
+            headerElements={headerElements.map((x, idx) => <KeyedComponent key={idx}>{x}</KeyedComponent>)}
+            bodyElements={bodyElements.map((x, idx) => <KeyedComponent key={idx}>{x}</KeyedComponent>)}
             appBodyString={reactAppString}
         />
     );
 }
-
-ServerHTML.propTypes = {
-    // eslint-disable-next-line react/forbid-prop-types
-    asyncComponentsState: PropTypes.object,
-    // eslint-disable-next-line react/forbid-prop-types
-    helmet: PropTypes.object,
-    // eslint-disable-next-line react/forbid-prop-types
-    jobsState: PropTypes.object,
-    nonce: PropTypes.string,
-    reactAppString: PropTypes.string,
-    // eslint-disable-next-line react/forbid-prop-types
-    routerState: PropTypes.object,
-    // eslint-disable-next-line react/forbid-prop-types
-    storeState: PropTypes.object,
-};
-
-// EXPORT
 
 export default ServerHTML;

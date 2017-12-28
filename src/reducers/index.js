@@ -1,21 +1,6 @@
 import { combineReducers } from "redux";
-import posts, * as FromPosts from "./posts";
+import userReducer from "./userReducer";
 
-// -----------------------------------------------------------------------------
-// REDUCER
-
-const rootReducer = combineReducers({
-    posts,
+export default combineReducers({
+    userRoute: userReducer
 });
-
-// -----------------------------------------------------------------------------
-// EXPORTED SELECTORS
-
-export function getPostById(state, id) {
-    return FromPosts.getById(state.posts, id);
-}
-
-// -----------------------------------------------------------------------------
-// REDUCER EXPORT
-
-export default rootReducer;
