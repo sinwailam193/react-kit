@@ -1,5 +1,4 @@
 import "normalize.css/normalize.css";
-
 import React, { Component } from "react";
 import Switch from "react-router-dom/Switch";
 import Route from "react-router-dom/Route";
@@ -7,7 +6,7 @@ import Helmet from "react-helmet";
 
 import config from "../../../config";
 
-import "./globals.css";
+import "../../../style/main.css";
 
 import Error404 from "./Error404";
 import Header from "./Header";

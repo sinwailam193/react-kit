@@ -1,3 +1,5 @@
+$marginVar: 10px;
+
 html {
   box-sizing: border-box;
   font-family: Arial, sans-serif;
@@ -13,9 +15,14 @@ html {
 
 /* Inline our ul for our menu */
 ul {
-  margin: 0;
+  margin: $marginVar;
   padding: 0;
   list-style-type: none;
 }
 
-ul li { display: inline; margin: 0 .5rem; }
+ul {
+    li {
+        display: inline;
+        margin: 0 .5rem;
+    }
+}
