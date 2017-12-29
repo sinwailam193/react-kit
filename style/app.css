@@ -1,0 +1,9 @@
+$primaryColor: #009688;
+$accentColor: #00B8D4;
+
+body {
+    margin: 0;
+    #app {
+        font-family: Roboto;
+    }
+}

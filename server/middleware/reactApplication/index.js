@@ -6,9 +6,14 @@ import { JobProvider, createJobContext } from "react-jobs";
 import asyncBootstrapper from "react-async-bootstrapper";
 import { Provider } from "react-redux";
 import Helmet from "react-helmet";
+import { SheetsRegistry } from "react-jss/lib/jss";
+import JssProvider from "react-jss/lib/JssProvider";
+import { create } from "jss";
+import preset from "jss-preset-default";
+import { MuiThemeProvider, createGenerateClassName } from "material-ui/styles";
 import configureStore from "../../../src/redux/configureStore";
-
 import config from "../../../config";
+import theme from "../../../client/theme";
 import Application from "../../../src/components/Application";
 import ServerHTML from "./ServerHTML";
 
@@ -37,6 +42,11 @@ export default function reactApplicationMiddleware(request, response) {
         return;
     }
 
+    // setting up material-ui
+    const sheetsRegistry = new SheetsRegistry();
+    const jss = create(preset());
+    const generateClassName = createGenerateClassName();
+
     // Create a context for our AsyncComponentProvider.
     const asyncComponentsContext = createAsyncContext();
 
@@ -55,11 +65,15 @@ export default function reactApplicationMiddleware(request, response) {
     const app = (
         <AsyncComponentProvider asyncContext={asyncComponentsContext}>
             <JobProvider jobContext={jobContext}>
-                <StaticRouter location={request.url} context={reactRouterContext}>
-                    <Provider store={store}>
-                        <Application />
-                    </Provider>
-                </StaticRouter>
+                <JssProvider registry={sheetsRegistry} jss={jss} generateClassName={generateClassName}>
+                    <MuiThemeProvider theme={theme} sheetsManager={new Map()}>
+                        <Provider store={store}>
+                            <StaticRouter location={request.url} context={reactRouterContext}>
+                                <Application />
+                            </StaticRouter>
+                        </Provider>
+                    </MuiThemeProvider>
+                </JssProvider>
             </JobProvider>
         </AsyncComponentProvider>
     );
@@ -69,10 +83,13 @@ export default function reactApplicationMiddleware(request, response) {
     asyncBootstrapper(app).then(() => {
         const appString = renderToString(app);
 
+        const css = sheetsRegistry.toString();
+
         // Generate the html response.
         const html = renderToStaticMarkup(<ServerHTML
             reactAppString={appString}
             nonce={nonce}
+            css={css}
             helmet={Helmet.rewind()}
             storeState={store.getState()}
             routerState={reactRouterContext}
@@ -80,14 +97,11 @@ export default function reactApplicationMiddleware(request, response) {
             asyncComponentsState={asyncComponentsContext.getState()}
         />);
 
-        // Check if the router context contains a redirect, if so we need to set
-        // the specific status and redirect header and end the response.
         if (reactRouterContext.url) {
             response.status(302).setHeader("Location", reactRouterContext.url);
-            response.end();
-            return;
+            return response.end();
         }
 
-        response.status(reactRouterContext.missed ? 404 : 200).send(`<!DOCTYPE html>${html}`);
+        response.status(reactRouterContext.missed ? 404 : 200).send(`<!DOCTYPE html>${html.replace(/&quot;/g, '"')}`);
     });
 }

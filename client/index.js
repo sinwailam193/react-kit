@@ -6,12 +6,12 @@ import asyncBootstrapper from "react-async-bootstrapper";
 import { AsyncComponentProvider } from "react-async-component";
 import { JobProvider } from "react-jobs";
 import { Provider } from "react-redux";
+import { MuiThemeProvider } from "material-ui/styles";
 import configureStore from "../src/redux/configureStore";
-
-import "./polyfills";
 
 import ReactHotLoader from "./components/ReactHotLoader";
 import Application from "../src/components/Application";
+import theme from "./theme";
 
 // Get the DOM Element that will host our React application.
 const container = document.querySelector("#app");
@@ -43,11 +43,13 @@ function renderApp(App, server) {
         <ReactHotLoader warnings={false}>
             <AsyncComponentProvider rehydrateState={asyncComponentsRehydrateState}>
                 <JobProvider rehydrateState={rehydrateState}>
-                    <Provider store={store}>
-                        <BrowserRouter forceRefresh={!supportsHistory}>
-                            <App />
-                        </BrowserRouter>
-                    </Provider>
+                    <MuiThemeProvider theme={theme}>
+                        <Provider store={store}>
+                            <BrowserRouter forceRefresh={!supportsHistory}>
+                                <App />
+                            </BrowserRouter>
+                        </Provider>
+                    </MuiThemeProvider>
                 </JobProvider>
             </AsyncComponentProvider>
         </ReactHotLoader>

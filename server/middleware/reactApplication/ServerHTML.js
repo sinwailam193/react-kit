@@ -1,6 +1,5 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable react/no-array-index-key */
-
 import React, { Children } from "react";
 import serialize from "serialize-javascript";
 
@@ -33,7 +32,7 @@ function scriptTag(jsFilePath) {
 
 function ServerHTML(props) {
     const {
-        asyncComponentsState, helmet, jobsState, nonce, reactAppString, routerState, storeState
+        asyncComponentsState, helmet, jobsState, nonce, reactAppString, routerState, storeState, css
     } = props;
 
     // Creates an inline script definition that is protected by the nonce.
@@ -45,7 +44,8 @@ function ServerHTML(props) {
         ...ifElse(helmet)(() => helmet.meta.toComponent(), []),
         ...ifElse(helmet)(() => helmet.link.toComponent(), []),
         ifElse(clientEntryAssets && clientEntryAssets.css)(() => stylesheetTag(clientEntryAssets.css)),
-        ...ifElse(helmet)(() => helmet.style.toComponent(), [])
+        ...ifElse(helmet)(() => helmet.style.toComponent(), []),
+        ifElse(Boolean(css))(() => <style id="jss-server-side">{css}</style>)
     ]);
 
     const bodyElements = removeNil([

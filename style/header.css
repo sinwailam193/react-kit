@@ -1,0 +1,14 @@
+#logo-container {
+    flex: 1;
+    font-size: 55px;
+}
+
+.link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.menu-button {
+    margin-left: -12px;
+    margin-right: 20px;
+}
