@@ -1,18 +1,16 @@
-/**
- * This is used by the HtmlWebpackPlugin to generate an html page that we will
- * use as a fallback for our service worker when the user is offline.  It will
- * embed all the required asset paths needed to bootstrap the application
- * in an offline session.
- */
-
-import React from "react";
-import { renderToStaticMarkup } from "react-dom/server";
-
-import HTML from "../../../src/components/HTML";
-
 module.exports = function generate(context) {
     // const config = context.htmlWebpackPlugin.options.custom.config;
-    const ClientConfig = context.htmlWebpackPlugin.options.custom.ClientConfig;
-    const html = renderToStaticMarkup(<HTML bodyElements={<ClientConfig nonce="OFFLINE_PAGE_NONCE_PLACEHOLDER" />} />);
-    return `<!DOCTYPE html>${html}`;
+    const nonce = "OFFLINE_PAGE_NONCE_PLACEHOLDER";
+    const serializedClientConfig = context.htmlWebpackPlugin.options.custom.serializedClientConfig;
+
+    return `
+        <!DOCTYPE html>
+        <html lang="en">
+            <head></head>
+            <body>
+                <div id="app"></div>
+                <script type="text/javascript" nonce=${nonce}>window.__CLIENT_CONFIG__=${serializedClientConfig}</script>
+            </body>
+        </html>
+    `;
 };

@@ -3,7 +3,7 @@ import { compose } from "redux";
 import { connect } from "react-redux";
 import { withJob } from "react-jobs";
 import Helmet from "react-helmet";
-import * as userAction from "../../../actions/userAction";
+import * as userAction from "../../actions/userAction";
 
 class UserRoute extends Component {
     render() {

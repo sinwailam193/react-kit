@@ -14,7 +14,7 @@ import { MuiThemeProvider, createGenerateClassName } from "material-ui/styles";
 import configureStore from "../../../src/redux/configureStore";
 import config from "../../../config";
 import theme from "../../../client/theme";
-import Application from "../../../src/components/Application";
+import Application from "../../../src/components";
 import ServerHTML from "./ServerHTML";
 
 /**
@@ -86,22 +86,22 @@ export default function reactApplicationMiddleware(request, response) {
         const css = sheetsRegistry.toString();
 
         // Generate the html response.
-        const html = renderToStaticMarkup(<ServerHTML
-            reactAppString={appString}
-            nonce={nonce}
-            css={css}
-            helmet={Helmet.rewind()}
-            storeState={store.getState()}
-            routerState={reactRouterContext}
-            jobsState={jobContext.getState()}
-            asyncComponentsState={asyncComponentsContext.getState()}
-        />);
+        const html = ServerHTML({
+            reactAppString: appString,
+            nonce,
+            css,
+            helmet: Helmet.rewind(),
+            storeState: store.getState(),
+            routerState: reactRouterContext,
+            jobsState: jobContext.getState(),
+            asyncComponentsState: asyncComponentsContext.getState()
+        });
 
         if (reactRouterContext.url) {
             response.status(302).setHeader("Location", reactRouterContext.url);
             return response.end();
         }
 
-        response.status(reactRouterContext.missed ? 404 : 200).send(`<!DOCTYPE html>${html.replace(/&quot;/g, '"')}`);
+        response.status(reactRouterContext.missed ? 404 : 200).send(html);
     });
 }

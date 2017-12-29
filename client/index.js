@@ -10,7 +10,7 @@ import { MuiThemeProvider } from "material-ui/styles";
 import configureStore from "../src/redux/configureStore";
 
 import ReactHotLoader from "./components/ReactHotLoader";
-import Application from "../src/components/Application";
+import Application from "../src/components";
 import theme from "./theme";
 
 // Get the DOM Element that will host our React application.
@@ -75,7 +75,7 @@ if (process.env.BUILD_FLAG_IS_DEV === "true" && module.hot) {
     // Accept changes to this file for hot reloading.
     module.hot.accept("./index.js");
     // Any changes to our App will cause a hotload re-render.
-    module.hot.accept("../src/components/Application", () => {
-        renderApp(require("../src/components/Application").default);
+    module.hot.accept("../src/components", () => {
+        renderApp(require("../src/components").default);
     });
 }

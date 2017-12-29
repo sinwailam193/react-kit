@@ -1,93 +1,45 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable react/no-array-index-key */
-import React, { Children } from "react";
 import serialize from "serialize-javascript";
 
 import config from "../../../config";
 import ifElse from "../../../src/utils/logic/ifElse";
-import removeNil from "../../../src/utils/arrays/removeNil";
 import getClientBundleEntryAssets from "./getClientBundleEntryAssets";
 
-import ClientConfig from "../../../config/components/ClientConfig";
-import HTML from "../../../src/components/HTML";
-
-// PRIVATES
-
-function KeyedComponent({ children }) {
-    return Children.only(children);
-}
+import serializedClientConfig from "../../../config/components/serializedClientConfig";
 
 // Resolve the assets (js/css) for the client bundle's entry chunk.
 const clientEntryAssets = getClientBundleEntryAssets();
 
 function stylesheetTag(stylesheetFilePath) {
-    return <link href={stylesheetFilePath} media="screen, projection" rel="stylesheet" type="text/css" />;
+    return `<link href="${stylesheetFilePath}" media="screen, projection" rel="stylesheet" type="text/css" />`;
 }
 
 function scriptTag(jsFilePath) {
-    return <script type="text/javascript" src={jsFilePath} />;
+    return `<script type="text/javascript" src="${jsFilePath}"></script>`;
 }
 
 // COMPONENT
 
-function ServerHTML(props) {
-    const {
-        asyncComponentsState, helmet, jobsState, nonce, reactAppString, routerState, storeState, css
-    } = props;
-
+function ServerHTML({
+    asyncComponentsState, helmet, jobsState, nonce, reactAppString, routerState, storeState, css
+}) {
     // Creates an inline script definition that is protected by the nonce.
-    const inlineScript = body => <script nonce={nonce} type="text/javascript" dangerouslySetInnerHTML={{ __html: body }} />;
+    const inlineScript = body => `<script nonce=${nonce} type="text/javascript">${body}</script>`;
+    const headerElements = `${ifElse(helmet)(() => helmet.title.toString(), "")}${ifElse(helmet)(() => helmet.base.toString(), "")}${ifElse(helmet)(() => helmet.meta.toString(), "")}${ifElse(helmet)(
+        () => helmet.link.toString(),
+        ""
+    )}${ifElse(clientEntryAssets && clientEntryAssets.css)(() => stylesheetTag(clientEntryAssets.css), "")}${ifElse(helmet)(() => helmet.style.toString(), "")}${ifElse(Boolean(css))(
+        () => `<style id="jss-server-side">${css}</style>`,
+        ""
+    )}`;
 
-    const headerElements = removeNil([
-        ...ifElse(helmet)(() => helmet.title.toComponent(), []),
-        ...ifElse(helmet)(() => helmet.base.toComponent(), []),
-        ...ifElse(helmet)(() => helmet.meta.toComponent(), []),
-        ...ifElse(helmet)(() => helmet.link.toComponent(), []),
-        ifElse(clientEntryAssets && clientEntryAssets.css)(() => stylesheetTag(clientEntryAssets.css)),
-        ...ifElse(helmet)(() => helmet.style.toComponent(), []),
-        ifElse(Boolean(css))(() => <style id="jss-server-side">{css}</style>)
-    ]);
+    const bodyElements = `${ifElse(storeState)(() =>
+        inlineScript(`window.__APP_STATE__=${serialize(storeState)};`))}${`<script type="text/javascript" nonce=${nonce}>window.__CLIENT_CONFIG__=${serializedClientConfig}</script>`}${ifElse(asyncComponentsState)(() =>
+        inlineScript(`window.__ASYNC_COMPONENTS_REHYDRATE_STATE__=${serialize(asyncComponentsState)}`))}${ifElse(jobsState)(() => inlineScript(`window.__JOBS_STATE__=${serialize(jobsState)}`))}${ifElse(routerState)(() => inlineScript(`window.__ROUTER_STATE__=${serialize(routerState)}`))}${ifElse(config("polyfillIO.enabled"))(() => scriptTag(`${config("polyfillIO.url")}?features=${config("polyfillIO.features").join(",")}`))}${ifElse(process.env.BUILD_FLAG_IS_DEV === "true" && config("bundles.client.devVendorDLL.enabled"))(() => scriptTag(`${config("bundles.client.webPath")}${config("bundles.client.devVendorDLL.name")}.js?t=${Date.now()}`), "")}${ifElse(clientEntryAssets && clientEntryAssets.js)(() =>
+        scriptTag(clientEntryAssets.js))}${ifElse(helmet)(() => helmet.script.toString(), "")}`;
 
-    const bodyElements = removeNil([
-        // Bind our redux store state so the client knows how to hydrate his one
-        ifElse(storeState)(() => inlineScript(`window.__APP_STATE__=${serialize(storeState)};`)),
-
-        // Binds the client configuration object to the window object so
-        // that we can safely expose some configuration values to the
-        // client bundle that gets executed in the browser.
-        <ClientConfig nonce={nonce} />,
-
-        // Bind our async components state so the client knows which ones
-        // to initialise so that the checksum matches the server response.
-        // @see https://github.com/ctrlplusb/react-async-component
-        ifElse(asyncComponentsState)(() => inlineScript(`window.__ASYNC_COMPONENTS_REHYDRATE_STATE__=${serialize(asyncComponentsState)};`)),
-
-        ifElse(jobsState)(() => inlineScript(`window.__JOBS_STATE__=${serialize(jobsState)}`)),
-
-        ifElse(routerState)(() => inlineScript(`window.__ROUTER_STATE__=${serialize(routerState)}`)),
-
-        // Enable the polyfill io script?
-        // This can't be configured within a react-helmet component as we
-        // may need the polyfill's before our client JS gets parsed.
-        ifElse(config("polyfillIO.enabled"))(() => scriptTag(`${config("polyfillIO.url")}?features=${config("polyfillIO.features").join(",")}`)),
-        // When we are in development mode our development server will
-        // generate a vendor DLL in order to dramatically reduce our
-        // compilation times.  Therefore we need to inject the path to the
-        // vendor dll bundle below.
-        ifElse(process.env.BUILD_FLAG_IS_DEV === "true" && config("bundles.client.devVendorDLL.enabled"))(() =>
-            scriptTag(`${config("bundles.client.webPath")}${config("bundles.client.devVendorDLL.name")}.js?t=${Date.now()}`)),
-        ifElse(clientEntryAssets && clientEntryAssets.js)(() => scriptTag(clientEntryAssets.js)),
-        ...ifElse(helmet)(() => helmet.script.toComponent(), [])
-    ]);
-
-    return (
-        <HTML
-            htmlAttributes={ifElse(helmet)(() => helmet.htmlAttributes.toComponent(), null)}
-            headerElements={headerElements.map((x, idx) => <KeyedComponent key={idx}>{x}</KeyedComponent>)}
-            bodyElements={bodyElements.map((x, idx) => <KeyedComponent key={idx}>{x}</KeyedComponent>)}
-            appBodyString={reactAppString}
-        />
-    );
+    return `${"<!DOCTYPE html>" + `<html ${helmet.htmlAttributes.toString()}>` + `<head>${headerElements}</head>` + `<body><div id="app">${reactAppString}</div>`}${bodyElements}</body></html>`;
 }
 
 export default ServerHTML;

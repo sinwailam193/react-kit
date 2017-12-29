@@ -6,7 +6,7 @@ import OfflinePlugin from "offline-plugin";
 
 import config from "../../../config";
 
-import ClientConfig from "../../../config/components/ClientConfig";
+import serializedClientConfig from "../../../config/components/serializedClientConfig";
 
 export default function withServiceWorker(webpackConfig, bundleConfig) {
     if (!config("serviceWorker.enabled")) {
@@ -41,7 +41,7 @@ export default function withServiceWorker(webpackConfig, bundleConfig) {
         // be needed by the offline template.
         custom: {
             config,
-            ClientConfig
+            serializedClientConfig
         }
     }));
 
