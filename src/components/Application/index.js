@@ -7,11 +7,9 @@ import config from "../../../config";
 
 import "../../../style/main.css";
 
-import Error404 from "./Error404";
 import Header from "./Header";
 
-import AsyncHomeRoute from "./AsyncHomeRoute";
-import AsyncUsersRoute from "./AsyncUsersRoute";
+import Routes from "./routes";
 
 export default class Application extends Component {
     render() {
@@ -59,13 +57,11 @@ export default class Application extends Component {
                     <meta name="msapplication-square310x310logo" content="/favicons/mstile-310x310.png" />
                     <link rel="manifest" href="/manifest.json" />
                 </Helmet>
-                <Header />
-                <div>
-                    <Switch>
-                        <Route path="/users" component={AsyncUsersRoute} />
-                        <Route exact path="/" component={AsyncHomeRoute} />
-                        <Route component={Error404} />
-                    </Switch>
+                <Route component={Header} />
+                <div className="application">
+                    <Switch>{Routes.map(({
+                        name, path, component, exact
+                    }) => <Route key={name} path={path} component={component} exact={exact} />)}</Switch>
                 </div>
             </div>
         );
